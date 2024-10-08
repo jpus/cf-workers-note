@@ -1,8 +1,18 @@
 addEventListener("fetch", event => {
-  let url = new URL(event.request.url);
-  if (url.pathname == "/" && url.search == "") {
-    url.href="https://c329k3-8080.csb.app"
-    let request = new Request(url, event.request);
-    event.respondWith(fetch(request));
-  }
+  event.respondWith(handleRequest(event.request))
 })
+
+async function handleRequest(request) {
+  const url = new URL(request.url)
+
+  // 代理所有请求到目标域名 xxxxxx改回自己的
+  url.hostname = "xxxxxx.xxxxxx.com"
+  
+  // 使用 HTTPS 代理
+  url.protocol = "https:"
+
+  const newRequest = new Request(url, request)
+
+  // 通过 fetch 请求目标地址并返回响应
+  return fetch(newRequest)
+}
